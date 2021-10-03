@@ -16,7 +16,7 @@ rect(screen, (32,178,170), (0,389, 550, 389))
 
 
 
-def smallbird(name,x,y,n,angle):
+def smallbird(name,x,y,n,angle): #функция для рисования чайки
     name = pygame.Surface([640,480], pygame.SRCALPHA, 32)
     name = name.convert_alpha()
     arc(name,WHITE,(0,0,4*n,3*n),0, 2.7, 3)
@@ -27,46 +27,42 @@ smallbird('1',50,200,20,-12)
 smallbird('2',20,10,15,12)
 smallbird('3',27,70,10,-19)
 
+firstbigbird = pygame.Surface([550,778], pygame.SRCALPHA, 32)
+firstbigbird = firstbigbird.convert_alpha()
 
-polygon(screen, WHITE, [[200,590],[150,550],[140,600],[190,600]])
-wig1 = pygame.Surface([400,400], pygame.SRCALPHA, 32)
+polygon(firstbigbird, WHITE, [[200,590],[150,550],[140,600],[190,600]]) #хвост
+wig1 = pygame.Surface([400,400], pygame.SRCALPHA, 32) #крыло 1
 wig1 = wig1.convert_alpha()
 polygon(wig1, WHITE, [[200,200],[200,155],[170,85],[85,60],[105,80],[90,80],[110,100],[95,100],[115,120],[100,120],[120,140],[105,140],[125,160],[110,160],[130,180],[115,180],[160,200]])
 polygon(wig1, BLACK, [[200,200],[200,155],[170,85],[85,60],[105,80],[90,80],[110,100],[95,100],[115,120],[100,120],[120,140],[105,140],[125,160],[110,160],[130,180],[115,180],[160,200]],1)
 wig1 = pygame.transform.rotate(wig1, 0)
-screen.blit(wig1,(140,380))
+firstbigbird.blit(wig1,(140,380)) 
 
-polygon(screen, WHITE, [[200,590],[150,550],[140,600],[190,600]])
-wig1 = pygame.Surface([400,400], pygame.SRCALPHA, 32)
-wig1 = wig1.convert_alpha()
-polygon(wig1, WHITE, [[200,200],[200,155],[170,85],[85,60],[105,80],[90,80],[110,100],[95,100],[115,120],[100,120],[120,140],[105,140],[125,160],[110,160],[130,180],[115,180],[160,200]])
-polygon(wig1, BLACK, [[200,200],[200,155],[170,85],[85,60],[105,80],[90,80],[110,100],[95,100],[115,120],[100,120],[120,140],[105,140],[125,160],[110,160],[130,180],[115,180],[160,200]],1)
-wig1 = pygame.transform.rotate(wig1, 0)
-screen.blit(wig1,(140,380))
 
-wig2 = pygame.Surface([400,400], pygame.SRCALPHA, 32)
+
+wig2 = pygame.Surface([400,400], pygame.SRCALPHA, 32) #крыло 2
 wig2 = wig2.convert_alpha()
 polygon(wig2, WHITE, [[200,200],[200,155],[170,85],[85,60],[105,80],[90,80],[110,100],[95,100],[115,120],[100,120],[120,140],[105,140],[125,160],[110,160],[130,180],[115,180],[160,200]])
 polygon(wig2, BLACK, [[200,200],[200,155],[170,85],[85,60],[105,80],[90,80],[110,100],[95,100],[115,120],[100,120],[120,140],[105,140],[125,160],[110,160],[130,180],[115,180],[160,200]],1)
 wig2 = pygame.transform.rotate(wig2, 20)
-screen.blit(wig2,(40,310))
+firstbigbird.blit(wig2,(40,310))
 
 
     
-ellipse(screen, WHITE, (190,560,190,90))
-ellipse(screen, WHITE, (350,575,90,35))
+ellipse(firstbigbird, WHITE, (190,560,190,90)) #тело
+ellipse(firstbigbird, WHITE, (350,575,90,35)) #шея
 
-polygon(screen, YELLOW, [[470,565],[500,570],[505,580],[480,580]])
-polygon(screen, BLACK, [[470,565],[500,570],[505,580],[475,580]],1)
+polygon(firstbigbird, YELLOW, [[470,565],[500,570],[505,580],[480,580]]) #клюв
+polygon(firstbigbird, BLACK, [[470,565],[500,570],[505,580],[475,580]],1)
 
-polygon(screen, YELLOW, [[460,590],[495,590],[505,580],[480,580]])
-polygon(screen, BLACK, [[460,590],[495,590],[505,580],[480,580]],1)
+polygon(firstbigbird, YELLOW, [[460,590],[495,590],[505,580],[480,580]])
+polygon(firstbigbird, BLACK, [[460,590],[495,590],[505,580],[480,580]],1)
 
-ellipse(screen, WHITE, (420,555,60,45))
-ellipse(screen, BLACK,(455,565,10,10))
+ellipse(firstbigbird, WHITE, (420,555,60,45)) #голова
+ellipse(firstbigbird, BLACK,(455,565,10,10)) #глаз
 
 
-leg2 = pygame.Surface([400,400], pygame.SRCALPHA, 32)
+leg2 = pygame.Surface([400,400], pygame.SRCALPHA, 32)  #лапы
 leg2 = leg2.convert_alpha()
 arc(leg2,YELLOW,(90,0,40,40),1, 3, 3)
 ellipse(leg2, WHITE, (0,0,90,30))
@@ -80,9 +76,10 @@ Leg2 = Leg2.convert_alpha()
 ellipse(Leg2, WHITE, (0,0,35,90))
 Leg2 = pygame.transform.rotate(Leg2, 20)
 Leg2.blit(leg2,(-90,400))
-screen.blit(Leg2,(230,280))
+firstbigbird.blit(Leg2,(230,280))
 Leg2 = pygame.transform.rotate(Leg2, 9)
-screen.blit(Leg2,(205,70))
+firstbigbird.blit(Leg2,(205,70))
+screen.blit(firstbigbird,(-80,-20))
 
 
 
