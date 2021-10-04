@@ -18,7 +18,22 @@ rect(screen, (32,178,170), (0,389, 550, 389))
 e=-60
 f=-30
 
-
+def fish(x,y,h): #функция для рисования рыбы
+    fish = pygame.Surface([1000,1000], pygame.SRCALPHA, 32)
+    fish = fish.convert_alpha()
+    polygon(fish, (25,25,112), [[0,2*h],[h,3*h],[0,4*h]])
+    polygon(fish, BLACK, [[0,2*h],[h,3*h],[0,4*h]],1)
+    polygon(fish, (25,25,112), [[3*h,3*h],[3*h,0],[4*h,3*h]])
+    polygon(fish, BLACK, [[3*h,3*h],[3*h,0],[4*h,3*h]],1)
+    polygon(fish, (25,25,112), [[3*h,5*h],[4*h,3*h],[3*h,3*h]])
+    polygon(fish, BLACK, [[3*h,5*h],[4*h,3*h],[3*h,3*h]])
+    ellipse(fish, (123, 104, 238), (h,2*h,4*h,2*h))
+    ellipse(fish, BLACK, (h,2*h,4*h,2*h),1)
+    ellipse(fish, (0,0,255), (4*h,2.5*h,0.6*h,0.6*h))
+    ellipse(fish, (0,0,0), (4*h,2.5*h,0.6*h,0.6*h),1)
+    ellipse(fish, BLACK, (4.2*h,2.5*h,0.3*h,0.3*h))
+    line(fish,BLACK,[4*h,3.5*h],[4.7*h,3.5*h],1)
+    screen.blit(fish,(x,y))
 def smallbird(name,x,y,n,angle): #функция для рисования чайки
     name = pygame.Surface([640,480], pygame.SRCALPHA, 32)
     name = name.convert_alpha()
@@ -106,8 +121,9 @@ screen.blit(firstbigbird,(400,290))
 firstbigbird =pygame.transform.flip(firstbigbird, True, False)
 firstbigbird = pygame.transform.scale(firstbigbird, (138,195))
 screen.blit(firstbigbird,(250,300))
-
-
+fish(50,650,16)
+fish(400,670,17)
+fish(450,590,12)
 
 pygame.display.update()
 clock = pygame.time.Clock()
