@@ -15,7 +15,7 @@ rect(screen, (255, 127, 80), (0,283, 550, 106))
 rect(screen, (32,178,170), (0,389, 550, 389))
 
 
-def fish(x,y,h): #функция для рисования рыбы
+def draw_fish(x,y,h): #функция для рисования рыбы
     fish = pygame.Surface([1000,1000], pygame.SRCALPHA, 32)
     fish = fish.convert_alpha()
     polygon(fish, (25,25,112), [[0,2*h],[h,3*h],[0,4*h]])
@@ -96,7 +96,7 @@ Leg2 = pygame.transform.rotate(Leg2, 9)
 firstbigbird.blit(Leg2,(205,70))
 screen.blit(firstbigbird,(-80,-20))
 
-fish(360,660,19)
+draw_fish(360,660,19)
 
 
 
