@@ -34,7 +34,7 @@ t=0.1
 print('Введите имя игрока:')
 name_of_player = input()
 def draw_new_balls_and_donuts():
-    '''рисует новую партию двигающихся шариков'''
+    '''рисует новую партию двигающихся шариков и пончиков'''
     global x, y, r, vx, vy,t,a,R,R0,V,n, color
     n=randint(2,N)
     x = [randint(R, a-R) for i in range(n)]
@@ -122,13 +122,17 @@ while not finished:
     clock.tick(30)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            f = open('text.txt','a')
+            f.write(name_of_player+'\n')
+            f.write(str(scores)+'\n')
+            f.close()
             finished = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             click_check()
     draw_new_balls_and_donuts()
     pygame.display.update()
     screen.fill(BLACK)
-            
+
 
 pygame.quit()
 
