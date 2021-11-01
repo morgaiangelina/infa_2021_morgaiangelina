@@ -33,6 +33,7 @@ COLORS = [RED, BLUE, YELLOW, GREEN, MAGENTA, CYAN]
 t=0.1
 print('Введите имя игрока:')
 name_of_player = input()
+
 def draw_new_balls_and_donuts():
     '''рисует новую партию двигающихся шариков и пончиков'''
     global x, y, r, vx, vy,t,a,R,R0,V,n, color
@@ -105,15 +106,16 @@ def click_check():
         c1 = (r[z]**2)/4
         if d<=b:
             scores+=1
-            print('Click! +1 score! scores:', scores)
+            print('A ball is catched! +1 score! scores:', scores)
             
             pygame.display.update()
         if d1<=b1:
             if d1>=c1:
                 scores+=5
-                print('Click! +1 score! scores:', scores)
+                print('A donut is catched! +5 score! scores:', scores)
                 pygame.display.update()
         z += 1
+        
 pygame.display.update()
 clock = pygame.time.Clock()
 finished = False
@@ -151,7 +153,6 @@ while not finished:
                 f.write(str(SCORES[SCORES.index(max(SCORES))])+'\n')
                 SCORES[SCORES.index(max(SCORES))]=-1
             f.close()
-
             finished = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             click_check()
