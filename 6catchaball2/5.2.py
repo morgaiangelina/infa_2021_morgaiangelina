@@ -122,10 +122,36 @@ while not finished:
     clock.tick(30)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            f = open('text.txt','a')
+            f = open('scores.txt','a')
             f.write(name_of_player+'\n')
             f.write(str(scores)+'\n')
             f.close()
+            j=0
+            SCORES = []
+            NAMES = []
+            f = open('scores.txt','r')
+            while True:
+                line = f.readline()
+                if not line:
+                    break
+                if (-1)**j==1:
+                    DATA0 = str(line)
+                    DATA0.replace('\n','')
+                    NAMES.append(DATA0)
+                elif (-1)**j==-1:
+                    DATA = str(line)
+                    DATA.replace('\n','')
+                    DATA = int(DATA)
+                    SCORES.append(DATA)
+                j+=1                
+            f.close()
+            f = open('scores.txt','w')
+            while max(SCORES)>-1:
+                f.write(NAMES[SCORES.index(max(SCORES))])
+                f.write(str(SCORES[SCORES.index(max(SCORES))])+'\n')
+                SCORES[SCORES.index(max(SCORES))]=-1
+            f.close()
+
             finished = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             click_check()
