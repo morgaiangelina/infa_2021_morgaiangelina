@@ -169,6 +169,8 @@ class Target:
         x = self.x = randint(600, 780)
         y = self.y = randint(300, 550)
         r = self.r = randint(2, 50)
+        self.vx = randint(-10,10)
+        self.vy = randint(-10,10)
         color = self.color = RED
 
 
@@ -183,6 +185,23 @@ class Target:
     def draw(self):
         '''рисует объект'''
         pygame.draw.circle (self.screen, self.color, (self.x, self.y), self.r)
+    def move(self):
+        """Переместить цель по прошествии единицы времени"""
+        
+        self.x += self.vx 
+        self.y -= self.vy
+        if (self.x-self.r)<0:
+            self.x=self.r
+            self.vx=-self.vx
+        elif (self.x+self.r)>(WIDTH):
+            self.vx=-self.vx
+            self.x = WIDTH-self.r
+        if (self.y-self.r)<0:
+            self.y=self.r
+            self.vy=-self.vy
+        elif (self.y+self.r)>(HEIGHT):
+            self.vy=-self.vy
+            self.y = HEIGHT-self.r
         
 
 
@@ -217,7 +236,8 @@ while not finished:
         elif event.type == pygame.MOUSEMOTION:
             gun.targetting(event)
     i=0
-
+    target1.move()
+    target2.move()
     for b in balls:
         b.move()
         if b.hittest(target1) and target1.live:
