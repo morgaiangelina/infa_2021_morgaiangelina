@@ -3,6 +3,7 @@ from random import choice
 from random import randint
 import pygame
 
+
 FPS = 30
 RED = 0xFF0000
 BLUE = 0x0000FF
@@ -26,8 +27,8 @@ class Ball:
         Args:
         x - начальное положение мяча по горизонтали
         y - начальное положение мяча по вертикали
+        live - количество ударов мяча до его исчезновения
         k - отношение модуля скорости мяча после удара и до
-        live - количество ударов о пол мяча до его исчезновения
         """
         self.k = k
         self.ball_screen = screen
@@ -40,7 +41,7 @@ class Ball:
         self.live = live
 
     def move(self):
-        """Переместить мяч по прошествии единицы времени.
+        """Перемещение мяча по прошествии единицы времени.
         Метод описывает перемещение мяча за один кадр перерисовки. То есть, обновляет значения
         self.x и self.y с учетом скоростей self.vx и self.vy, силы гравитации, действующей на мяч,
         и стен по краям окна.
@@ -64,7 +65,7 @@ class Ball:
             self.y = height_of_window - self.r
 
     def draw(self):
-        """рисует мяч"""
+        """Функция рисует мяч"""
         pygame.draw.circle(self.ball_screen, self.color, (self.x, self.y), self.r)
 
     def hittest(self, obj):
@@ -81,15 +82,16 @@ class Ball:
 
 
 class Gun:
-    def __init__(self, x1=40, y1=450, x2=50, y2=450, width=10):
+    def __init__(self, scores=0, x1=40, y1=450, x2=50, y2=450, width=10):
         """ Конструктор класса Gun
         Args:
         x1 - положение одного конца по горизонтали
         y1 - положение одного конца по вертикали
         x2 - положение другого конца горизонтали
         y2 - положение другого конца по вертикали
-        width - ширина
+        width - ширина пушки
         """
+        self.scores = scores
         self.gun_screen = screen
         self.f2_power = 10
         self.f2_on = 0
@@ -102,12 +104,15 @@ class Gun:
         self.width = width
 
     def fire2_start(self):
+        """Запускание подготовки к выстрелу"""
         self.f2_on = 1
 
     def fire2_end(self, end_event):
         """Выстрел мячом.
         Происходит при отпускании кнопки мыши.
         Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
+        Args:
+            end_event - событие отпускания мыши
         """
         global balls, bullet
         bullet += 1
@@ -121,7 +126,10 @@ class Gun:
         self.f2_power = 10
 
     def targetting(self, targetting_event):
-        """Прицеливание. Зависит от положения мыши."""
+        """Прицеливание. Зависит от положения мыши.
+        Args:
+            targetting_event - событие изменение позиции мыши
+        """
         if targetting_event:
             self.an = math.atan((targetting_event.pos[1] - 450) / (targetting_event.pos[0] - 20))
             self.x2 = self.x1 + self.f2_power * math.cos(self.an)
@@ -132,11 +140,11 @@ class Gun:
             self.color = GREY
 
     def draw(self):
-        """рисует объект"""
+        """Функция рисует пушку"""
         pygame.draw.line(self.gun_screen, self.color, (self.x1, self.y1), (self.x2, self.y2), self.width)
 
     def power_up(self):
-        """увеличивает начальную скорость мяча и длину пушки, меняет цвет пушки в зависимости от"""
+        """увеличивает начальную скорость мяча и длину пушки, меняет цвет пушки в зависимости от длительности нажатия"""
         if self.f2_on:
             if self.f2_power < 100:
                 self.f2_power += 1
@@ -144,36 +152,40 @@ class Gun:
         else:
             self.color = GREY
 
+    def hit(self, points=1):
+        """Попадание шарика в цель.
+        Args:
+            points - шаг изменения количества очков при попадании в цель
+        """
+        self.scores += points
+        print('scores:', self.scores)
+        return self.scores
+
 
 class Target:
-    def __init__(self, scores=0, live=1, x=randint(600, 780), y=randint(300, 550), r=randint(2, 50)):
+    def __init__(self, live=1):
         """ Конструктор класса ball
         Args:
-        x - начальное положение цели по горизонтали
-        y - начальное положение цели по вертикали
+            scores - количество заработанных очков
+            live - приобретает значение 0 при попадании в цель, 1 - когда цель существует
 
         """
-        self.scores = scores
+
         self.target_screen = screen
         self.live = live
-        self.x = x
-        self.y = y
-        self.r = r
+        self.x = randint(600, 780)
+        self.y = randint(300, 550)
+        self.r = randint(2, 50)
         self.vx = randint(-10, 10)
         self.vy = randint(-10, 10)
         self.color = RED
 
-    def hit(self, points=1):
-        """Попадание шарика в цель."""
-        self.scores += points
-        print('scores:', self.scores)
-
     def draw(self):
-        """рисует объект"""
+        """Функция рисует объект"""
         pygame.draw.circle(self.target_screen, self.color, (self.x, self.y), self.r)
 
     def move(self):
-        """Переместить цель по прошествии единицы времени"""
+        """Перемещение цели по прошествии единицы времени"""
 
         self.x += self.vx
         self.y -= self.vy
@@ -225,15 +237,15 @@ while not finished:
     target2.move()
     for i in balls:
         i.move()
-        if i.hittest(target1) and target1.live:
+        if i.hittest(target1):
             target1.live = 0
-            target1.hit()
+            gun.hit()
             target1 = Target()
             balls.pop(balls.index(i))
         else:
-            if i.hittest(target2) and target2.live:
+            if i.hittest(target2):
                 target2.live = 0
-                target2.hit()
+                gun.hit()
                 target2 = Target()
                 balls.pop(balls.index(i))
         if i.live <= 0:
