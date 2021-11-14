@@ -3,7 +3,6 @@ from random import choice
 from random import randint
 import pygame
 
-
 FPS = 30
 RED = 0xFF0000
 BLUE = 0x0000FF
@@ -107,7 +106,7 @@ class Gun:
         """Запускание подготовки к выстрелу"""
         self.f2_on = 1
 
-    def fire2_end(self, end_event, *array_balls):
+    def fire2_end(self, end_event, array_balls):
         """Выстрел мячом.
         Происходит при отпускании кнопки мыши.
         Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
@@ -226,7 +225,7 @@ while not finished:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             gun.fire2_start()
         elif event.type == pygame.MOUSEBUTTONUP:
-            gun.fire2_end(event)
+            gun.fire2_end(event, balls)
         elif event.type == pygame.MOUSEMOTION:
             gun.targetting(event)
     target1.move()
@@ -248,6 +247,5 @@ while not finished:
             balls.pop(balls.index(i))
 
     gun.power_up()
-
 
 pygame.quit()
