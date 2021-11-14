@@ -107,21 +107,19 @@ class Gun:
         """Запускание подготовки к выстрелу"""
         self.f2_on = 1
 
-    def fire2_end(self, end_event):
+    def fire2_end(self, end_event, *array_balls):
         """Выстрел мячом.
         Происходит при отпускании кнопки мыши.
         Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
         Args:
             end_event - событие отпускания мыши
+            *array_balls - массив мячей
         """
-        global balls, bullet
-        bullet += 1
         new_ball = Ball()
-        new_ball.r += 5
         self.an = math.atan2((end_event.pos[1] - new_ball.y), (end_event.pos[0] - new_ball.x))
         new_ball.vx = self.f2_power * math.cos(self.an)
         new_ball.vy = - self.f2_power * math.sin(self.an)
-        balls.append(new_ball)
+        array_balls.append(new_ball)
         self.f2_on = 0
         self.f2_power = 10
 
@@ -168,7 +166,6 @@ class Target:
         Args:
             scores - количество заработанных очков
             live - приобретает значение 0 при попадании в цель, 1 - когда цель существует
-
         """
 
         self.target_screen = screen
@@ -205,7 +202,6 @@ class Target:
 
 pygame.init()
 screen = pygame.display.set_mode((width_of_window, height_of_window))
-bullet = 0
 balls = []
 
 clock = pygame.time.Clock()
@@ -219,8 +215,8 @@ while not finished:
     gun.draw()
     target1.draw()
     target2.draw()
-    for b in balls:
-        b.draw()
+    for i in balls:
+        i.draw()
     pygame.display.update()
 
     clock.tick(FPS)
