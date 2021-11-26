@@ -23,10 +23,10 @@ v_max: int = 35
 class Bullet:
     def __init__(self, gun, live=1, k=0.9):
 
-        """ Конструктор класса ball
+        """ Конструктор класса Bullet
         Args:
-        live - количество ударов мяча до его исчезновения
-        k - отношение модуля скорости мяча после удара и до
+        live - количество ударов мяча о пол до его исчезновения
+        k - отношение модуля скорости снаряда после удара и до
         """
         self.k = k
         self.ball_screen = screen
@@ -40,7 +40,7 @@ class Bullet:
         self.damage = 1
 
     def draw(self):
-        """Функция рисует мяч"""
+        """Функция рисует снаряд"""
         pygame.draw.circle(self.ball_screen, self.color, (self.x, self.y), self.r)
 
     def hittest(self, obj):
@@ -174,35 +174,33 @@ class Gun:
         """Запускание подготовки к выстрелу"""
         self.f2_on = 1
 
-    def fire2_left_end(self, end_event, array_balls):
-        """Выстрел мячом.
+    def fire2_left_end(self, end_event, array_first_type_bullets):
+        """Выстрел снарядом первого типа.
         Происходит при отпускании кнопки мыши.
-        Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
         Args:
             end_event - событие отпускания мыши
-            array_balls - массив мячей
+            array_first_type_bullets - массив снарядов первого типа
         """
         new_ball = FirstTypeBullet(gun)
         self.an = math.atan2((end_event.pos[1] - new_ball.y), (end_event.pos[0] - new_ball.x))
         new_ball.vx = self.f2_power * math.cos(self.an)
         new_ball.vy = - self.f2_power * math.sin(self.an)
-        array_balls.append(new_ball)
+        array_first_type_bullets.append(new_ball)
         self.f2_on = 0
         self.f2_power = 10
 
-    def fire2_right_end(self, end_event, array_balls):
-        """Выстрел мячом.
+    def fire2_right_end(self, end_event, array_second_type_bullets):
+        """Выстрел снарядом второго типа.
         Происходит при отпускании кнопки мыши.
-        Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
         Args:
             end_event - событие отпускания мыши
-            array_balls - массив мячей
+            array_balls - массив снарядов второго типа
         """
         new_ball = SecondTypeBullet(gun)
         self.an = math.atan2((end_event.pos[1] - new_ball.y), (end_event.pos[0] - new_ball.x))
         new_ball.vx = self.f2_power * math.cos(self.an)
         new_ball.vy = - self.f2_power * math.sin(self.an)
-        array_balls.append(new_ball)
+        array_second_type_bullets.append(new_ball)
         self.f2_on = 0
         self.f2_power = 10
 
@@ -229,7 +227,8 @@ class Gun:
             self.color = GREY
 
     def power_up(self):
-        """увеличивает начальную скорость мяча и длину пушки, меняет цвет пушки в зависимости от длительности нажатия"""
+        """увеличивает начальную скорость снаряда и длину пушки, меняет цвет пушки
+        в зависимости от длительности нажатия"""
         if self.f2_on:
             if self.f2_power < 100:
                 self.f2_power += 1
@@ -242,6 +241,8 @@ class Gun:
         Args:
             points - шаг изменения количества очков при попадании в цель
             obj - объект столкновения
+        Returns:
+            self.scores - количество заработанных очков
         """
         if type(obj) == FirstTypeTarget:
             self.scores += points
@@ -268,7 +269,7 @@ class Gun:
 
 class GunEnemy(Gun):
     def draw(self):
-        """Функция рисует неподвижного врага танка игрока"""
+        """Функция рисует неподвижного врага-танка танка игрока"""
         pygame.draw.rect(self.gun_screen, GREY, (self.x, self.y - round(0.5 * self.height), self.width, self.height))
         pygame.draw.rect(self.gun_screen, GREY, (
             self.x - round(0.7 * self.width), self.y + round(0.5 * self.height), round(2.4 * self.width),
@@ -292,7 +293,7 @@ class GunEnemy(Gun):
         pygame.draw.line(self.gun_screen, self.color, (self.x, self.y), (self.end_x, self.end_y), self.width_of_stick)
 
     def fire2_end(self, end_event, array_bullets):
-        """Выстрел бомбой.
+        """Выстрел бомбой из врага-танка.
         Происходит при отпускании кнопки мыши.
         Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
         Args:
@@ -473,7 +474,7 @@ target1 = FirstTypeTarget()
 target2 = SecondTypeTarget()
 finished = False
 right_direction = left_direction = up_direction = down_direction = False
-t = 0
+bomb_creating_time = 0
 
 while not finished:
     screen.fill(WHITE)
@@ -534,47 +535,47 @@ while not finished:
     target1.move()
     target2.move()
 
-    for i in first_type_bullets:
-        i.move()
-        if i.hittest(target1):
+    for first_type_bullet in first_type_bullets:
+        first_type_bullet.move()
+        if first_type_bullet.hittest(target1):
             target1.live = 0
             gun.hit_first_type_bullet(target1)
             target1 = FirstTypeTarget()
         else:
-            if i.hittest(target2):
+            if first_type_bullet.hittest(target2):
                 target2.live = 0
                 gun.hit_first_type_bullet(target2)
                 target2 = SecondTypeTarget()
-        if i.live <= 0:
-            first_type_bullets.pop(first_type_bullets.index(i))
+        if first_type_bullet.live <= 0:
+            first_type_bullets.pop(first_type_bullets.index(first_type_bullet))
 
-    for i in second_type_bullets:
-        i.move()
-        if i.hittest(target1):
+    for second_type_bullet in second_type_bullets:
+        second_type_bullet.move()
+        if second_type_bullet.hittest(target1):
             target1.live = 0
             gun.hit_second_type_bullet(target1)
             target1 = FirstTypeTarget()
             second_type_bullets.pop(second_type_bullets.index(i))
         else:
-            if i.hittest(target2):
+            if second_type_bullet.hittest(target2):
                 target2.live = 0
                 gun.hit_second_type_bullet(target2)
                 target2 = SecondTypeTarget()
                 second_type_bullets.pop(second_type_bullets.index(i))
-        if i.live <= 0:
+        if second_type_bullet.live <= 0:
             second_type_bullets.pop(second_type_bullets.index(i))
 
-    for i in bombs:
-        i.move()
-        i.hittest_gun(gun)
-        if i.live <= 0:
-            bombs.pop(bombs.index(i))
-    if t >= 120:
+    for bomb in bombs:
+        bomb.move()
+        bomb.hittest_gun(gun)
+        if bomb.live <= 0:
+            bombs.pop(bombs.index(bomb))
+    if bomb_creating_time >= 120:
         target1.create_bomb(bombs)
         bombs[-1].x = target1.x
         bombs[-1].y = target1.y
-        t = 0
-    t += 1
+        bomb_creating_time = 0
+    bomb_creating_time += 1
     gun.power_up()
     gun_enemy.power_up()
     if gun.live <= 0:
@@ -582,10 +583,10 @@ while not finished:
 
 if not finished:
     screen.fill(BLACK)
-    f1 = pygame.font.Font(None, 100)
-    text1 = f1.render('game is over', True,
-                      (255, 0, 0))
-    screen.blit(text1, (180, 250))
+    ending_font = pygame.font.Font(None, 100)
+    game_is_over = ending_font.render('game is over', True,
+                                      (255, 0, 0))
+    screen.blit(game_is_over, (180, 250))
     pygame.display.update()
 
     while not finished:
